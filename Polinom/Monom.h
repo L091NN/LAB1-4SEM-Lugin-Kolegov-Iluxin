@@ -6,6 +6,8 @@ class Monom
 	double k; // коэффицент монома
 	int p; // показатели степени монома
 	int Number; // номер в полиноме
+
+
 public:
 	Monom(double k = 1.0, int x = 1, int y = 1, int z = 1);
 	~Monom();
