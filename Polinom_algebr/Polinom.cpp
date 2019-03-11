@@ -37,36 +37,54 @@ Polinom::~Polinom()
 
 void Polinom::recount() // перезадает номер мономам после удаления/добавления новых мономов, объединяет мономы с одинаковым p !после сортировки!
 {
-	for (auto I = P.begin(); I != --P.end();)
+	if (P.size() > 1)
 	{
-		auto I1 = I++;
-		if (I->Getp() == I1->Getp())
+		auto J = P.end();
+		J--;
+		J--;
+		for (auto I = P.begin(); I != J;)
 		{
-			I1->SetK(I1->GetK() + I->GetK());
-			P.erase(I);
-			I = I1;
-			I++;
+			auto I1 = I++;
+			if (I->Getp() == I1->Getp())
+			{
+				I1->SetK(I1->GetK() + I->GetK());
+				P.erase(I);
+				I = I1;
+				I++;
+				J = P.end();
+				J--;
+				J--;
+			}
 		}
 	}
-	int i = 0;
-	for (auto I = P.begin(); I != P.end(); I++)
+	if (P.size() > 0)
 	{
-		I->SetNum(i++);
+		int i = 0;
+		for (auto I = P.begin(); I != P.end(); I++)
+		{
+			I->SetNum(i++);
+		}
 	}
 }
 
 void Polinom::sort() // сортирует мономы по переменной p (показатели степени)
 {
-	for (int i = 0; i < P.size() - 1; i++) // i - номер прохода
+	for (int i = 1; i < P.size(); i++) // i - номер прохода
 	{
-		for (auto J = P.begin(); J != --P.end();) // внутренний цикл прохода
+		auto I = P.end();
+		I--;
+		for (auto J = P.begin(); J != I;) // внутренний цикл прохода
 		{
 			auto J1 = J++;
 			if (J1->Getp() < J->Getp())
 			{
 				P.insert(J1, *J);
 				P.erase(J);
+				J = J1;
+				I = P.end();
+				I--;
 			}
+
 		}
 	}
 }
@@ -74,9 +92,11 @@ void Polinom::sort() // сортирует мономы по переменной p (показатели степени)
 void Polinom::parsing(string s) // жопоболь
 {
 	bool ind_of_monom = 0; // monom begin?
+	char check_error_double_symbol = char(1);  // COSTIL---------------------------------------------------
 	bool now_k = 0; // now input koefficient?
 	bool check_point = 0; // last symbol point?
 	char ind_val = ' '; // now x, y or z?
+	bool sign = 0; // 0 - plus, 1 - minus
 	string buf_of_value = "000"; // s[0] - x s[1] - y s[2] - z
 	string buf_of_k = ""; // koef
 	Monom M = {}; // monom
@@ -84,6 +104,7 @@ void Polinom::parsing(string s) // жопоболь
 	{
 		if (int(s[i]) >= 48 && int(s[i]) <= 57) // if s[i] - number
 		{
+			check_error_double_symbol = char(0); // COSTIL---------------------------------------------------
 			if (!ind_of_monom) // if monom not begin
 			{
 				ind_of_monom = 1; // then monom begin
@@ -92,10 +113,6 @@ void Polinom::parsing(string s) // жопоболь
 			if (now_k) // now input koef?
 			{
 				buf_of_k += s[i];
-				if (check_point)
-				{
-					check_point = 0;
-				}
 			}
 			if (ind_val == 'x') // last symbol x?(or x^)
 			{
@@ -113,6 +130,10 @@ void Polinom::parsing(string s) // жопоболь
 				ind_val = ' ';
 			}
 
+		}
+		if (check_error_double_symbol == s[i])
+		{
+			throw("Error in " + to_string(i) + " symbol: double symbol");
 		}
 		if (s[i] == '.') // if s[i] - point
 		{
@@ -136,10 +157,6 @@ void Polinom::parsing(string s) // жопоболь
 			{
 				throw ("ERROR in " + to_string(i) + " symbol: double input x");
 			}
-			if (check_point)
-			{
-				throw ("ERROR in " + to_string(i) + " symbol: incorrect point");
-			}
 			if (!ind_of_monom)
 			{
 				ind_of_monom = 1;
@@ -151,11 +168,11 @@ void Polinom::parsing(string s) // жопоболь
 			}
 			if (ind_val == 'y') // if last symbol y (not number)
 			{
-				buf_of_value[1] = 1;
+				buf_of_value[1] = '1';
 			}
 			if (ind_val == 'z') // if last symbol z (not number)
 			{
-				buf_of_value[2] = 1;
+				buf_of_value[2] = '1';
 			}
 			ind_val = 'x'; // now x last symbol
 		}
@@ -165,10 +182,6 @@ void Polinom::parsing(string s) // жопоболь
 			{
 				throw ("ERROR in " + to_string(i) + " symbol: double input y");
 			}
-			if (check_point)
-			{
-				throw ("ERROR in " + to_string(i) + " symbol: incorrect point");
-			}
 			if (!ind_of_monom)
 			{
 				ind_of_monom = 1;
@@ -180,11 +193,11 @@ void Polinom::parsing(string s) // жопоболь
 			}
 			if (ind_val == 'x') // if last symbol x (not number)
 			{
-				buf_of_value[0] = 1;
+				buf_of_value[0] = '1';
 			}
 			if (ind_val == 'z') // if last symbol z (not number)
 			{
-				buf_of_value[2] = 1;
+				buf_of_value[2] = '1';
 			}
 			ind_val = 'y'; // now y last symbol
 		}
@@ -194,10 +207,6 @@ void Polinom::parsing(string s) // жопоболь
 			{
 				throw ("ERROR in " + to_string(i) + " symbol: double input z");
 			}
-			if (check_point)
-			{
-				throw ("ERROR in " + to_string(i) + " symbol: incorrect point");
-			}
 			if (!ind_of_monom)
 			{
 				ind_of_monom = 1;
@@ -209,35 +218,98 @@ void Polinom::parsing(string s) // жопоболь
 			}
 			if (ind_val == 'x') // if last symbol x (not number)
 			{
-				buf_of_value[0] = 1;
+				buf_of_value[0] = '1';
 			}
 			if (ind_val == 'y') // if last symbol y (not number)
 			{
-				buf_of_value[1] = 1;
+				buf_of_value[1] = '1';
 			}
 			ind_val = 'z'; // now z last symbol
 		}
 		if (s[i] == '+' || s[i] == '-')
 		{
+			if (i == 0)
+			{
+				if (s[i] == '-')
+				{
+					sign = 1;
+				}
+			}
+			else
+			{
+				if (check_point)
+				{
+					check_point = 0;
+				}
+				if (ind_val == 'x') // if last symbol x (not number)
+				{
+					buf_of_value[0] = '1';
+				}
+				if (ind_val == 'y') // if last symbol y (not number)
+				{
+					buf_of_value[1] = '1';
+				}
+				if (ind_val == 'z') // if last symbol z (not number)
+				{
+					buf_of_value[2] = '1';
+				}
+				M.SetXpower(int(buf_of_value[0]) - 48);
+				M.SetYpower(int(buf_of_value[1]) - 48);
+				M.SetZpower(int(buf_of_value[2]) - 48);
+				if (!sign)
+				{
+					M.SetK(stod(buf_of_k));
+				}
+				if (sign)
+				{
+					M.SetK(-stod(buf_of_k));
+				}
+				M.SetNum(P.size());
+				P.push_back(M);
+				M = {};
+				buf_of_k = {};
+				buf_of_value = "000";
+				ind_of_monom = 0;
+				ind_val = ' ';
+				if (s[i] == '-')
+				{
+					sign = 1;
+				}
+				if (s[i] == '+')
+				{
+					sign = 0;
+				}
+			}
+		}
+		if (i == s.size() - 1)
+		{
+			if ((int(s[i]) >= 48 && int(s[i]) <= 57) || s[i] == 'x' || s[i] == 'X' || s[i] == 'y' || s[i] == 'Y' || s[i] == 'z' || s[i] == 'Z')
+			{
+
+			}
+			else
+			{
+				throw("Error in " + to_string(i) + " symbol: incorrect last symbol");
+			}
+			if (check_point)
+			{
+				check_point = 0;
+			}
 			M.SetXpower(int(buf_of_value[0]) - 48);
 			M.SetYpower(int(buf_of_value[1]) - 48);
 			M.SetZpower(int(buf_of_value[2]) - 48);
-			if (s[i] == '+')
+			if (!sign)
 			{
 				M.SetK(stod(buf_of_k));
 			}
-			if (s[i] == '-')
+			if (sign)
 			{
 				M.SetK(-stod(buf_of_k));
 			}
 			M.SetNum(P.size());
 			P.push_back(M);
-			M = {};
-			buf_of_k = {};
-			buf_of_value = "000";
-			ind_of_monom = 0;
-			ind_val = ' ';
 		}
+		check_error_double_symbol = s[i];
 	}
 }
 
@@ -250,14 +322,68 @@ list<Monom> Polinom::GetPolinom()
 {
 	return P;
 }
+
 string Polinom::GetPolinom_str()
 {
 	string Res = "";
-	for (auto I = P.begin(); I != P.end(); I++)
+	for (auto I = P.begin(); I != P.end();)
 	{
-		string buf = "";
-
+		if (I->GetK() != 1.0)
+		{
+			string buf = "";
+			buf = to_string(I->GetK());
+			buf.resize(buf.size() - 4);
+			Res += buf;
+		}
+		if (I->GetXpower() > 0)
+		{
+			if (I->GetXpower() > 1)
+			{
+				Res += "(x^";
+				Res += to_string(I->GetXpower());
+				Res += ')';
+			}
+			else
+			{
+				Res += 'x';
+			}
+		}
+		if (I->GetYpower() > 0)
+		{
+			if (I->GetYpower() > 1)
+			{
+				Res += "(y^";
+				Res += to_string(I->GetYpower());
+				Res += ')';
+			}
+			else
+			{
+				Res += 'y';
+			}
+		}
+		if (I->GetZpower() > 0)
+		{
+			if (I->GetZpower() > 1)
+			{
+				Res += "(z^";
+				Res += to_string(I->GetZpower());
+				Res += ')';
+			}
+			else
+			{
+				Res += 'z';
+			}
+		}
+		I++;
+		if (I != P.end())
+		{
+			if (I->GetK() > 0)
+			{
+				Res += '+';
+			}
+		}
 	}
+	return Res;
 }
 
 Polinom& Polinom::operator=(const Polinom &P)
