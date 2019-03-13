@@ -9,7 +9,7 @@ class Monom
 
 
 public:
-	Monom(double k = 1.0, int x = 1, int y = 1, int z = 1);
+	Monom(double k = 1.0, int x = 0, int y = 0, int z = 0);
 	~Monom();
 
 	void SetXpower(int x);

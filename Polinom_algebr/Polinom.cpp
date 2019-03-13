@@ -41,7 +41,6 @@ void Polinom::recount() // перезадает номер мономам после удаления/добавления но
 	{
 		auto J = P.end();
 		J--;
-		J--;
 		for (auto I = P.begin(); I != J;)
 		{
 			auto I1 = I++;
@@ -50,13 +49,21 @@ void Polinom::recount() // перезадает номер мономам после удаления/добавления но
 				I1->SetK(I1->GetK() + I->GetK());
 				P.erase(I);
 				I = I1;
-				I++;
 				J = P.end();
-				J--;
 				J--;
 			}
 		}
+		J = P.end();
+		for (auto I = P.begin(); I != J;)
+		{
+			auto I1 = I++;
+			if ((I1->GetK())*(I1->GetK()) < 0.00000000001)
+			{
+				P.erase(I1);
+			}
+		}
 	}
+
 	if (P.size() > 0)
 	{
 		int i = 0;
@@ -295,6 +302,18 @@ void Polinom::parsing(string s) // жопоболь
 			{
 				check_point = 0;
 			}
+			if (ind_val == 'x') // if last symbol x (not number)
+			{
+				buf_of_value[0] = '1';
+			}
+			if (ind_val == 'y') // if last symbol y (not number)
+			{
+				buf_of_value[1] = '1';
+			}
+			if (ind_val == 'z') // if last symbol z (not number)
+			{
+				buf_of_value[2] = '1';
+			}
 			M.SetXpower(int(buf_of_value[0]) - 48);
 			M.SetYpower(int(buf_of_value[1]) - 48);
 			M.SetZpower(int(buf_of_value[2]) - 48);
@@ -313,7 +332,7 @@ void Polinom::parsing(string s) // жопоболь
 	}
 }
 
-std::string Polinom::GetName()
+string Polinom::GetName()
 {
 	return Name;
 }
@@ -384,6 +403,11 @@ string Polinom::GetPolinom_str()
 		}
 	}
 	return Res;
+}
+
+int Polinom::GetID()
+{
+	return ID;
 }
 
 Polinom& Polinom::operator=(const Polinom &P)
@@ -471,6 +495,10 @@ Polinom Polinom::dx()
 			M.SetXpower(M.GetXpower() - 1);
 			Res.P.push_back(M);
 		}
+		else
+		{
+			I->SetK(0.0);
+		}
 	}
 	Res.sort();
 	Res.recount();
@@ -489,6 +517,10 @@ Polinom Polinom::dy()
 			M.SetYpower(M.GetYpower() - 1);
 			Res.P.push_back(M);
 		}
+		else
+		{
+			I->SetK(0.0);
+		}
 	}
 	Res.sort();
 	Res.recount();
@@ -506,6 +538,10 @@ Polinom Polinom::dz()
 			M.SetK(M.GetK() * M.GetZpower());
 			M.SetZpower(M.GetZpower() - 1);
 			Res.P.push_back(M);
+		}
+		else
+		{
+			I->SetK(0.0);
 		}
 	}
 	Res.sort();
@@ -559,5 +595,19 @@ Polinom Polinom::Iz(double C)//C-const
 	Res.P.push_back(M);
 	Res.sort();
 	Res.recount();
+	return Res;
+}
+
+double Polinom::count(double x, double y, double z)
+{
+	double Res = 0.0;
+	for (auto I = P.begin(); I != P.end(); I++)
+	{
+		double Mon = I->GetK();
+		Mon *= pow(x, I->GetXpower());
+		Mon *= pow(y, I->GetYpower());
+		Mon *= pow(z, I->GetZpower());
+		Res += Mon;
+	}
 	return Res;
 }

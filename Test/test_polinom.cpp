@@ -57,7 +57,7 @@ TEST(Polinom, check_getpolinom_str_1)
 
 TEST(Polinom, check_getpolinom_str_2)
 {
-	string s1 = "xyz-3.00xz+8.50(y^6)(z^9)-3.22";
+	string s1 = "xyz-3.00xz+8.50(y^2)(z^4)-3.22";
 	Polinom P(s1);
 	string s2 = P.GetPolinom_str();
 	EXPECT_EQ(s1, s2);
@@ -65,11 +65,101 @@ TEST(Polinom, check_getpolinom_str_2)
 
 TEST(Polinom, check_plus)
 {
-	string s1 = "xyz-3.00xz+8.50(y^6)(z^9)-3.22";
+	string s1 = "xyz-3.00xz+8.50(y^2)(z^4)-3.22";
 	Polinom P1(s1);
 	Polinom P2(s1);
 	Polinom P3;
 	P3 = P2 + P1;
-	string s2 = "2.00xyz-6.00xz+17.00(y^6)(z^9)-6.44";
+	string s2 = "2.00xyz-6.00xz+17.00(y^2)(z^4)-6.44";
 	EXPECT_EQ(P3.GetPolinom_str(), s2);
+}
+
+TEST(Polinom, check_minus)
+{
+	string s1 = "xyz-3.00xz+8.50(y^2)(z^4)-3.22";
+	Polinom P1(s1);
+	Polinom P2(s1);
+	Polinom P3;
+	P3 = P2 - P1;
+	string s2 = "";
+	EXPECT_EQ(P3.GetPolinom_str(), s2);
+}
+
+TEST(Polinom, check_mult_1)
+{
+	string s1 = "xyz-3.00xz+8.50(y^2)(z^4)-3.22";
+	Polinom P1(s1);
+	Polinom P2(s1);
+	Polinom P3;
+	P3 = P2 * P1;
+	string s2 = "(x^2)(y^2)(z^2)-6.00(x^2)y(z^2)+9.00(x^2)(z^2)+17.00x(y^3)(z^5)-51.00x(y^2)(z^5)-6.44xyz+19.32xz+72.25(y^4)(z^8)-54.74(y^2)(z^4)+10.36";
+	EXPECT_EQ(P3.GetPolinom_str(), s2);
+}
+
+TEST(Polinom, check_mult_2)
+{
+	string s1 = "x+y+z";
+	Polinom P1(s1);
+	Polinom P2(s1);
+	Polinom P3;
+	P3 = P2 * P1;
+	string s2 = "(x^2)+2.00xy+2.00xz+(y^2)+2.00yz+(z^2)";
+	EXPECT_EQ(P3.GetPolinom_str(), s2);
+}
+
+TEST(Polinom, check_dx)
+{
+	string s1 = "(x^6)+(x^2)(z^7)-5x^2y+xyz3-1.0+5.2x";
+	Polinom P1(s1);
+	P1 = P1.dx();
+	string s2 = "6.00(x^5)-10.00xy+2.00x(z^7)+y(z^3)+5.20";
+	EXPECT_EQ(P1.GetPolinom_str(), s2);
+}
+
+TEST(Polinom, check_dy)
+{
+	string s1 = "(y^6)+(y^2)(z^7)-5y^2x+xyz3-1.0+5.2y";
+	Polinom P1(s1);
+	P1 = P1.dy();
+	string s2 = "-10.00xy+x(z^3)+6.00(y^5)+2.00y(z^7)+5.20";
+	EXPECT_EQ(P1.GetPolinom_str(), s2);
+}
+
+TEST(Polinom, check_dz)
+{
+	string s1 = "(z^6)+(z^2)(y^7)-5z^2x+xyz3-1.0+5.2z";
+	Polinom P1(s1);
+	P1 = P1.dz();
+	string s2 = "3.00xy(z^2)-10.00xz+2.00(y^7)z+6.00(z^5)+5.20";
+	EXPECT_EQ(P1.GetPolinom_str(), s2);
+}
+
+TEST(Polinom, check_Ix)
+{
+	string s1 = "(x^3)+(x^7)(z^7)-5x^3y+xyz3-1.0+5x";
+	Polinom P1(s1);
+	P1 = P1.Ix();
+	string s2 = "0.12(x^8)(z^7)-2.50";
+	EXPECT_EQ(P1.GetPolinom_str(), s2);
+}
+
+TEST(Polinom, check_count_1)
+{
+	string s1 = "x+y+z";
+	Polinom P(s1);
+	EXPECT_EQ(P.count(1, 1, 1), 3.0);
+}
+
+TEST(Polinom, check_count_2)
+{
+	string s1 = "2.0x+y5+5.0z2";
+	Polinom P(s1);
+	EXPECT_EQ(P.count(0, 2, 2), 52.0);
+}
+
+TEST(Polinom, check_count_3)
+{
+	string s1 = "x9y9z9-3z9+x-5+yz-3";
+	Polinom P(s1);
+	EXPECT_EQ(P.count(-1, -1, 2), -1035.0);
 }

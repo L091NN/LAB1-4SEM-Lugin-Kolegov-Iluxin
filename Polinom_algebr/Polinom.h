@@ -2,6 +2,7 @@
 #define __POLINOM_H__
 
 #include<list>
+#include<math.h>
 #include"Monom.h"
 
 class Polinom
@@ -25,6 +26,7 @@ public:
 	std::string GetName();
 	std::list<Monom> GetPolinom();
 	std::string GetPolinom_str();
+	int GetID();
 
 	Polinom& operator=(const Polinom &P);
 	Polinom operator+(const Polinom &P);
@@ -41,7 +43,7 @@ public:
 	Polinom Iy(double C = 0);//C-const
 	Polinom Iz(double C = 0);//C-const
 
-
+	double count(double x, double y, double z);
 
 
 
