@@ -2,10 +2,13 @@
 
 Monom::Monom(double k, int x, int y, int z)
 {
-	SetK(k);
+	this->k = 0.0;
+	p = 0;
+	Number = 0;
 	SetXpower(x);
 	SetYpower(y);
 	SetZpower(z);
+	SetK(k);
 }
 
 Monom::~Monom()
@@ -17,7 +20,7 @@ void Monom::SetXpower(int x)
 {
 	if (x < 0 || x > 9)
 	{
-		throw("x incorrect");
+		throw("x power incorrect");
 	}
 	p = p % 100 + x * 100;
 }
@@ -25,7 +28,7 @@ void Monom::SetYpower(int y)
 {
 	if (y < 0 || y > 9)
 	{
-		throw("y incorrect");
+		throw("y power incorrect");
 	}
 	p = p - ((p % 100) / 10) * 10 + y * 10;
 }
@@ -33,7 +36,7 @@ void Monom::SetZpower(int z)
 {
 	if (z < 0 || z > 9)
 	{
-		throw("y incorrect");
+		throw("z power incorrect");
 	}
 	p = p - (p % 100) % 10 + z;
 }
@@ -65,6 +68,11 @@ void Monom::SetK(double k)
 double Monom::GetK()
 {
 	return k;
+}
+
+int Monom::Getp()
+{
+	return p;
 }
 
 void Monom::SetNum(int N)
@@ -103,7 +111,11 @@ Monom& Monom::operator=(const Monom &M)// number don't change
 
 Monom Monom::operator+(const Monom &M) // складывает только коэффиценты
 {
-	Monom M1(*this);
-	M1.k = this->k + M.k;
-	return M1;
+	if (this->p == M.p)
+	{
+		Monom M1(*this);
+		M1.k = this->k + M.k;
+		return M1;
+	}
+	throw("ERROR, powers not equal");
 }
