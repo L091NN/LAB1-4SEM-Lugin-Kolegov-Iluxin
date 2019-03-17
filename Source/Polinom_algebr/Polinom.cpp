@@ -1,5 +1,5 @@
-#include"Polinom.h"
-#include<string>
+#include "Polinom.h"
+#include <string>
 
 using namespace std;
 

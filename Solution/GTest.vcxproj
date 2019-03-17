@@ -20,13 +20,13 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{48217823-C60F-4986-B64E-7928F80FB9B9}</ProjectGuid>
-    <RootNamespace>test</RootNamespace>
+    <ProjectGuid>{4FF6181A-CF63-4F33-A89C-5244F9D04D59}</ProjectGuid>
+    <RootNamespace>GTest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -74,14 +74,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>
+      </SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Asus\source\repos\LAB1-4SEM-Lugin-Kolegov-Iluxin\Tests</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions); _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING</PreprocessorDefinitions>
     </ClCompile>
-    <Link>
-      <AdditionalDependencies>C:\Users\Asus\source\repos\LAB1-4SEM-Lugin-Kolegov-Iluxin\Polinom;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -99,13 +95,10 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Asus\source\repos\LAB1-4SEM-Lugin-Kolegov-Iluxin\Tests</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions); _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>C:\Users\Asus\source\repos\LAB1-4SEM-Lugin-Kolegov-Iluxin\Polinom;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -123,8 +116,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="test_main.cpp" />
-    <ClCompile Include="test_monom.cpp" />
+    <ClInclude Include="..\Source\Gtest\gtest.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Gtest\gtest-all.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

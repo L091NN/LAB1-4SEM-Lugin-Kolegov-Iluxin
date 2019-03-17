@@ -1,5 +1,5 @@
-#include"gtest.h"
-#include"Polinom.h"
+#include "gtest.h"
+#include "Polinom.h"
 
 using namespace std;
 

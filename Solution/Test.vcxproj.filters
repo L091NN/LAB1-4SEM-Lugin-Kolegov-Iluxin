@@ -15,28 +15,20 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="test_main.cpp">
-      <Filter>Файлы ресурсов</Filter>
+    <ClCompile Include="..\Source\Test\test_main.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="test_monom.cpp">
-      <Filter>Файлы ресурсов</Filter>
+    <ClCompile Include="..\Source\Test\test_monom.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="..\Polinom_algebr\Monom.cpp">
-      <Filter>Файлы ресурсов</Filter>
+    <ClCompile Include="..\Source\Test\test_polinom.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="test_polinom.cpp">
-      <Filter>Файлы ресурсов</Filter>
+    <ClCompile Include="..\Source\Polinom_algebr\Monom.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="..\Polinom_algebr\Polinom.cpp">
-      <Filter>Файлы ресурсов</Filter>
+    <ClCompile Include="..\Source\Polinom_algebr\Polinom.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Polinom_algebr\Monom.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Polinom_algebr\Polinom.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
