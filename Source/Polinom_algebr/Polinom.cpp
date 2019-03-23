@@ -5,28 +5,25 @@ using namespace std;
 
 int Polinom::ID_gen = 1;
 
-Polinom::Polinom(string s, string Name)
+Polinom::Polinom(string s)
 {
 	parsing(s);
 	sort();
 	recount();
-	this->Name = Name;
 	ID = ID_gen++;
 }
 
-Polinom::Polinom(list<Monom> P1, string Name)
+Polinom::Polinom(list<Monom> P1)
 {
 	P = P1;
 	sort();
 	recount();
-	this->Name = Name;
 	ID = ID_gen++;
 }
 
-Polinom::Polinom(Monom M, string Name)
+Polinom::Polinom(Monom M)
 {
 	P.push_back(M);
-	this->Name = Name;
 	ID = ID_gen++;
 }
 
@@ -332,11 +329,6 @@ void Polinom::parsing(string s) // жопоболь
 	}
 }
 
-string Polinom::GetName()
-{
-	return Name;
-}
-
 list<Monom> Polinom::GetPolinom()
 {
 	return P;
@@ -415,7 +407,6 @@ Polinom& Polinom::operator=(const Polinom &P)
 	if (this != &P)
 	{
 		this->P = P.P;
-		this->Name = P.Name;
 	}
 	return *this;
 }

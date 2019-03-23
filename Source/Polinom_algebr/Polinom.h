@@ -8,7 +8,6 @@
 class Polinom
 {
 	std::list<Monom> P; // место хранения мономов
-	std::string Name; // name of polinom
 	static int ID_gen;
 	int ID;
 
@@ -18,12 +17,11 @@ class Polinom
 
 public:
 
-	Polinom(std::string s = "", std::string Name = "NULL");
-	Polinom(std::list<Monom> P1, std::string Name = "NULL");
-	Polinom(Monom M, std::string Name = "NULL");
+	Polinom(std::string s = "");
+	Polinom(std::list<Monom> P1);
+	Polinom(Monom M);
 	~Polinom();
 
-	std::string GetName();
 	std::list<Monom> GetPolinom();
 	std::string GetPolinom_str();
 	int GetID();
@@ -44,10 +42,6 @@ public:
 	Polinom Iz(double C = 0);//C-const
 
 	double count(double x, double y, double z);
-
-
-
-
 };
 
 #endif
