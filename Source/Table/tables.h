@@ -149,17 +149,83 @@ public:
 template <class T1, class T2>
 class TreeTable
 {
-	int eventCount = 0;
-
 	struct Node
 	{
 		TableRecord<T1, T2> data;
 		Node* left, *right;
 	};
-
+	int eventCount = 0;
 	Node* table;
-	Node* DeleteNode(Node* parent, T1 key);
+	void* DeleteNode(Node* parent, T1 key);
 public:
+	void Insert(TableRecord<T1, T2> tr);
+	bool Find(T1 key, TableRecord<T1, T2>* ret);
+	void Delete(T1 key);	
+};
+#pragma endregion
+
+#pragma region HashTable
+
+template <class T1, class T2>
+class HashTable
+{
+	int size;
+	TableRecord<T1, T2>* table;
+	int Hash(std::string key);
+public:
+	HashTable(int s)
+	{
+		size = s;
+		table = new TableRecord<T1, T2>[size];
+
+		for (int i = 0; i < size; i++)
+			table[i] = nullptr;
+	}
+	HashTable(const HashTable<T1,T2>& ht)
+	{
+		size = ht.size;
+		table = new TableRecord<T1, T2>[size];
+		for (int i = 0; i < size; i++)
+			table[i] = ht.table[i];
+	}
+	~HashTable()
+	{
+		delete[] table;
+	}
+
+	void Insert(TableRecord<T1, T2> tr);
+	bool Find(T1 key, TableRecord<T1, T2>* ret);
+	void Delete(T1 key);
+};
+
+#pragma endregion
+
+#pragma region HashTableList
+
+template <class T1, class T2>
+class HashTableList
+{
+	int size;
+	std::list<TableRecord<T1, T2>>* table;
+	int Hash(std::string key);
+public:
+	HashTableList(int s)
+	{
+		size = s;
+		table = new std::list<TableRecord<T1, T2>>[size];
+	}
+	HashTableList(const HashTable<T1, T2>& ht)
+	{
+		size = ht.size;
+		table = new std::list<TableRecord<T1, T2>>[size];
+		for (int i = 0; i < size; i++)
+			table[i] = ht.table[i];
+	}
+	~HashTableList()
+	{
+		delete[] table;
+	}
+
 	void Insert(TableRecord<T1, T2> tr);
 	bool Find(T1 key, TableRecord<T1, T2>* ret);
 	void Delete(T1 key);

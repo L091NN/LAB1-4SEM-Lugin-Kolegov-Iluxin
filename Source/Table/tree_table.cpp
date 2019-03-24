@@ -49,12 +49,13 @@ template <class T1, class T2>
 void TreeTable<T1, T2>::Delete(T1 key)
 {
 	DeleteNode(table, key);
+	eventCount++;
 }
 
 template <class T1, class T2>
-TreeTable<T1, T2>::Node* TreeTable<T1, T2>::DeleteNode(Node* parent, T1 key)
+void* TreeTable<T1, T2>::DeleteNode(TreeTable<T1, T2>::Node* parent, T1 key)
 {
-	if (root == nullptr) return parent;
+	if (parent == nullptr) return parent;
 	else if (key < parent->data->key)
 		parent->left = DeleteNode(parent->left, key);
 	else if (key > parent->data->key)
@@ -107,7 +108,24 @@ bool TreeTable<T1, T2>::Find(T1 key, TableRecord<T1, T2>* ret)
 		return true;
 	}
 
-	return false;
-	//Node* l = table;
+	Node* current = table;
+	while (true)
+	{
+		if (current == nullptr)
+			return false;
+		if (current->data->key == key)
+		{
+			ret = current->data;
+			return true;
+		}
+		else if(current->data->key > key)
+		{
+			current = current->left;
+		}
+		else
+		{
+			current = current->right;
+		}
+	}
 	
 }
