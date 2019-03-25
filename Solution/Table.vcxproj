@@ -26,7 +26,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -115,13 +115,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Source\Table\array_table.cpp" />
-    <ClCompile Include="..\Source\Table\hash_table.cpp" />
-    <ClCompile Include="..\Source\Table\hash_table_list.cpp" />
-    <ClCompile Include="..\Source\Table\list_table.cpp" />
     <ClCompile Include="..\Source\Table\main.cpp" />
-    <ClCompile Include="..\Source\Table\sorted_table.cpp" />
-    <ClCompile Include="..\Source\Table\tree_table.cpp" />
+    <ClCompile Include="..\Source\Table\source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Table\tables.h" />

@@ -15,6 +15,8 @@ struct TableRecord
 		key = ikey;
 		data = idata;
 	}
+
+	TableRecord() { }
 };
 
 #pragma region ArrayTable
@@ -32,6 +34,11 @@ class ArrayTable
 			a1[i] = a2[i];
 	}
 public:
+	ArrayTable()
+	{
+		size = 0;
+		table = new TableRecord<T1, T2>[memSize];
+	}
 	ArrayTable(const ArrayTable<T1, T2>& t)
 	{
 		table = new TableRecord<T1, T2>[t.memSize];
@@ -41,11 +48,7 @@ public:
 		Copy(table, t.table, size);
 	}
 
-	ArrayTable()
-	{
-		size = 0;
-		table = TableRecord<T1, T2>[memSize];
-	}
+	
 
 	~ArrayTable()
 	{
@@ -55,6 +58,15 @@ public:
 	void Insert(TableRecord<T1, T2> tr);
 	bool Find(T1 key, TableRecord<T1, T2>* ret);
 	void Delete(T1 key);
+
+	std::list<TableRecord<T1, T2>> GetAll()
+	{
+		std::list<TableRecord<T1, T2>> tmp;
+		for (int i = 0; i < size; i++)
+			tmp.push_back(table[i]);
+
+		return tmp;
+	}
 };
 
 #pragma endregion
@@ -69,6 +81,13 @@ public:
 	void Insert(TableRecord<T1, T2> tr);
 	bool Find(T1 key, TableRecord<T1, T2>* ret);
 	void Delete(T1 key);
+
+	std::list<TableRecord<T1, T2>> GetAll()
+	{
+		//???
+		std::list<TableRecord<T1, T2>> tmp(table);
+		return tmp;
+	}
 };
 
 #pragma endregion
@@ -83,12 +102,14 @@ class SortedTable
 	{
 		int index;
 		Tk key;
+
+		memPack() {}
 	};	
 
 	int maxSize;
 	int size;
 	TableRecord<T1, T2>* table;
-	memPack* mem;
+	memPack<T1>* mem;
 
 	void moveLeft(int index)
 	{
@@ -112,7 +133,7 @@ public:
 		maxSize = s;
 		size = 0;
 		table = new TableRecord<T1, T2>[maxSize];
-		mem = new memPack[maxSize];
+		mem = new memPack<T1>[maxSize];
 
 		for (int i = 0; i < maxSize; i++)
 		{
@@ -140,6 +161,17 @@ public:
 	void Insert(TableRecord<T1, T2> tr);
 	bool Find(T1 key, TableRecord<T1, T2>* ret);
 	void Delete(T1 key);
+
+	std::list<TableRecord<T1, T2>> GetAll()
+	{
+		std::list<TableRecord<T1, T2>> tmp;
+		for (int i = 0; i < size; i++) 
+		{
+			tmp.push_back(table[mem[i].index]);
+		}
+
+		return tmp;
+	}
 };
 
 #pragma endregion
@@ -157,10 +189,27 @@ class TreeTable
 	int eventCount = 0;
 	Node* table;
 	void* DeleteNode(Node* parent, T1 key);
+
+	void AddToExport(std::list<TableRecord<T1, T2>>* list, Node* n)
+	{
+		if (n == nullptr)
+			return;
+		list->push_back(n->data);
+		AddToExport(list, n->left);
+		AddToExport(list, n->right);
+	}
 public:
 	void Insert(TableRecord<T1, T2> tr);
 	bool Find(T1 key, TableRecord<T1, T2>* ret);
-	void Delete(T1 key);	
+	void Delete(T1 key);
+
+	std::list<TableRecord<T1, T2>> GetAll()
+	{
+		std::list<TableRecord<T1, T2>> tmp;
+		AddToExport(&tmp, table);
+
+		return tmp;
+	}
 };
 #pragma endregion
 
@@ -177,9 +226,6 @@ public:
 	{
 		size = s;
 		table = new TableRecord<T1, T2>[size];
-
-		for (int i = 0; i < size; i++)
-			table[i] = nullptr;
 	}
 	HashTable(const HashTable<T1,T2>& ht)
 	{
@@ -196,6 +242,16 @@ public:
 	void Insert(TableRecord<T1, T2> tr);
 	bool Find(T1 key, TableRecord<T1, T2>* ret);
 	void Delete(T1 key);
+
+	std::list<TableRecord<T1, T2>> GetAll()
+	{
+		std::list<TableRecord<T1, T2>> tmp;
+		for (int i = 0; i < size; i++)
+			if(table[i] != nullptr)
+				tmp.push_back(table[i]);
+
+		return tmp;
+	}
 };
 
 #pragma endregion
@@ -229,6 +285,17 @@ public:
 	void Insert(TableRecord<T1, T2> tr);
 	bool Find(T1 key, TableRecord<T1, T2>* ret);
 	void Delete(T1 key);
+
+	std::list<TableRecord<T1, T2>> GetAll()
+	{
+		std::list<TableRecord<T1, T2>> tmp;
+		for (int i = 0; i < size; i++)
+			if (table[i] != nullptr)
+				for (auto item : table[i])
+					tmp.push_back(item);
+
+		return tmp;
+	}
 };
 
 #pragma endregion

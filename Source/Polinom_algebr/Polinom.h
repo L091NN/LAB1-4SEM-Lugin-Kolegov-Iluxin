@@ -1,9 +1,9 @@
 #ifndef __POLINOM_H__
 #define __POLINOM_H__
 
-#include<list>
-#include<math.h>
-#include"Monom.h"
+#include <list>
+#include <math.h>
+#include "Monom.h"
 
 class Polinom
 {
