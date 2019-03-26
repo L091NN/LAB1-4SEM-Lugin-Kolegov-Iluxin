@@ -475,12 +475,166 @@ Polinom Polinom::operator*(const Polinom &P)
 
 Polinom Polinom::operator/(const Polinom &P)
 {
-	return *this;
+	bool ind_of_end = 0;
+	list<Monom> Res;
+	Monom M(0.0);
+	Res.push_back(M);
+	Polinom p(P);
+	list<Monom> D = p.GetPolinom();
+	list<Monom> W = this->GetPolinom();
+	auto I1 = Res.begin();
+	auto I2 = Res.begin();
+	auto I3 = W.begin();
+	auto I4 = D.begin();
+	for (; W.begin()->Getp() >= D.begin()->Getp();)
+	{
+		I2 = I1;
+		I3 = W.begin();
+		I4 = D.begin();
+		int x_now = I3->GetXpower();
+		list<Monom> W_copy = W;
+		for (; I3->GetXpower() == x_now;)
+		{
+			int RMPX = I3->GetXpower() - I4->GetXpower(); // Res monom power X
+			if (RMPX < 0)
+			{
+				ind_of_end = 1;
+				break;
+			}
+			int RMPY = I3->GetYpower() - I4->GetYpower(); // Res monom power Y
+			if (RMPY < 0)
+			{
+				ind_of_end = 1;
+				break;
+			}
+			int RMPZ = I3->GetZpower() - I4->GetZpower(); // Res monom power Z
+			if (RMPZ < 0)
+			{
+				ind_of_end = 1;
+				break;
+			}
+			double RMK = I3->GetK() / I4->GetK(); // Res monom koef
+			Monom RM(RMK, RMPX, RMPY, RMPZ);
+			Res.push_back(RM);
+			I3++;
+		}
+
+		if (ind_of_end)
+		{
+			I2 = Res.end();
+			I2--;
+			for (; I1 != I2;)
+			{
+				Res.pop_back();
+				I2 = Res.end();
+				I2--;
+			}
+			break;
+		}
+
+		Polinom P1(W_copy);
+		I2++;
+		for (; I2 != Res.end();)
+		{
+			Polinom P2(*I2);
+			for (; I4 != D.end();)
+			{
+				Polinom P3(*I4);
+				P1 = P1 - P2 * P3;
+				I4++;
+			}
+			I2++;
+		}
+		I2--;
+		I1 = I2;
+		W_copy = P1.GetPolinom();
+		W = W_copy;
+	}
+
+	Polinom PRes(Res);
+	return PRes;
 }
 
 Polinom Polinom::operator%(const Polinom &P)
 {
-	return *this;
+	bool ind_of_end = 0;
+	list<Monom> Res;
+	Monom M(0.0);
+	Res.push_back(M);
+	Polinom p(P);
+	list<Monom> D = p.GetPolinom();
+	list<Monom> W = this->GetPolinom();
+	auto I1 = Res.begin();
+	auto I2 = Res.begin();
+	auto I3 = W.begin();
+	auto I4 = D.begin();
+	for (; W.begin()->Getp() >= D.begin()->Getp();)
+	{
+		I2 = I1;
+		I3 = W.begin();
+		I4 = D.begin();
+		int x_now = I3->GetXpower();
+		list<Monom> W_copy = W;
+		for (; I3->GetXpower() == x_now;)
+		{
+			int RMPX = I3->GetXpower() - I4->GetXpower(); // Res monom power X
+			if (RMPX < 0)
+			{
+				ind_of_end = 1;
+				break;
+			}
+			int RMPY = I3->GetYpower() - I4->GetYpower(); // Res monom power Y
+			if (RMPY < 0)
+			{
+				ind_of_end = 1;
+				break;
+			}
+			int RMPZ = I3->GetZpower() - I4->GetZpower(); // Res monom power Z
+			if (RMPZ < 0)
+			{
+				ind_of_end = 1;
+				break;
+			}
+			double RMK = I3->GetK() / I4->GetK(); // Res monom koef
+			Monom RM(RMK, RMPX, RMPY, RMPZ);
+			Res.push_back(RM);
+			I3++;
+		}
+
+		if (ind_of_end)
+		{
+			I2 = Res.end();
+			I2--;
+			for (; I1 != I2;)
+			{
+				Res.pop_back();
+				I2 = Res.end();
+				I2--;
+			}
+			break;
+		}
+
+		Polinom P1(W_copy);
+		I2++;
+		for (; I2 != Res.end();)
+		{
+			Polinom P2(*I2);
+			for (; I4 != D.end();)
+			{
+				Polinom P3(*I4);
+				P1 = P1 - P2 * P3;
+				I4++;
+			}
+			I2++;
+		}
+		I2--;
+		I1 = I2;
+		W_copy = P1.GetPolinom();
+		W = W_copy;
+	}
+
+	Polinom PRes(W);
+	return PRes;
 }
 
 Polinom Polinom::dx()

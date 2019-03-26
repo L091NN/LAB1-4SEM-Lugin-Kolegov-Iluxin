@@ -181,3 +181,19 @@ TEST(Polinom, check_count_3)
 	Polinom P(s1);
 	EXPECT_EQ(P.count(-1, -1, 2), -1035.0);
 }
+
+TEST(Polinom, check_dev_1)
+{
+	string s1 = "x5y2z2+x4yz+x3yz+x2y5z+xyz2+z+y";
+	Polinom P1(s1);
+	string s2 = "xyz+yz+z";
+	Polinom P2(s2);
+	Polinom P3 = P1 / P2;
+	Polinom P4 = P1 % P2;
+	string s3 = "";
+	string s4 = "";
+	EXPECT_EQ(P3.GetPolinom_str(), s3);
+	EXPECT_EQ(P4.GetPolinom_str(), s4);
+	Polinom P5 = P2 * P3 + P4;
+	EXPECT_EQ(P1.GetPolinom_str(), P5.GetPolinom_str());
+}
