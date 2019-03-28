@@ -184,14 +184,46 @@ TEST(Polinom, check_count_3)
 
 TEST(Polinom, check_dev_1)
 {
-	string s1 = "x5y2z2+x4yz+x3yz+x2y5z+xyz2+z+y";
+	string s1 = "2.00(x^4)+5.00(x^3)-12.00(x^2)+8.00x-5.00";
 	Polinom P1(s1);
-	string s2 = "xyz+yz+z";
+	string s2 = "x2+3x-5";
 	Polinom P2(s2);
 	Polinom P3 = P1 / P2;
 	Polinom P4 = P1 % P2;
-	string s3 = "";
+	string s3 = "2.00(x^2)-1.00x+1.00";
 	string s4 = "";
+	EXPECT_EQ(P3.GetPolinom_str(), s3);
+	EXPECT_EQ(P4.GetPolinom_str(), s4);
+	Polinom P5 = P2 * P3 + P4;
+	EXPECT_EQ(P1.GetPolinom_str(), P5.GetPolinom_str());
+}
+
+TEST(Polinom, check_dev_2)
+{
+	string s1 = "2.00(x^5)(y^2)(z^2)-2.00(x^4)(y^4)(z^2)-1.00(x^4)(y^2)(z^2)+2.00(x^4)y(z^3)+(x^3)(y^4)(z^2)+(x^3)(y^2)(z^2)-1.00(x^3)y(z^3)+2.00(x^3)yz-1.00(x^2)(y^4)(z^2)+(x^2)y(z^3)-1.00(x^2)yz+4.00(x^2)+xyz-2.00x+2.00";
+	Polinom P1(s1);
+	string s2 = "2x2-x+1";
+	Polinom P2(s2);
+	Polinom P3 = P1 / P2;
+	Polinom P4 = P1 % P2;
+	string s3 = "(x^3)(y^2)(z^2)-1.00(x^2)(y^4)(z^2)+(x^2)y(z^3)+xyz+2.00";
+	string s4 = "";
+	EXPECT_EQ(P3.GetPolinom_str(), s3);
+	EXPECT_EQ(P4.GetPolinom_str(), s4);
+	Polinom P5 = P2 * P3 + P4;
+	EXPECT_EQ(P1.GetPolinom_str(), P5.GetPolinom_str());
+}
+
+TEST(Polinom, check_dev_3)
+{
+	string s1 = "(x^6)(y^5)(z^7)-1.00(x^5)(y^6)(z^2)+(x^5)(y^6)z-3.00(x^5)(y^5)(z^7)+3.00(x^4)(y^6)(z^2)-3.00(x^4)(y^6)z+3.00(x^4)(y^5)(z^7)+(x^4)y(z^2)-3.00(x^3)(y^6)(z^2)+3.00(x^3)(y^6)z-3.00(x^3)y(z^2)+3.00(x^2)y(z^2)-1.00(x^2)+3.00x+y4z-z5-3.00";
+	Polinom P1(s1);
+	string s2 = "x2-3x+3";
+	Polinom P2(s2);
+	Polinom P3 = P1 / P2;
+	Polinom P4 = P1 % P2;
+	string s3 = "(x^4)(y^5)(z^7)-1.00(x^3)(y^6)(z^2)+(x^3)(y^6)z+(x^2)y(z^2)-1.00";
+	string s4 = "(y^4)z-1.00(z^5)";
 	EXPECT_EQ(P3.GetPolinom_str(), s3);
 	EXPECT_EQ(P4.GetPolinom_str(), s4);
 	Polinom P5 = P2 * P3 + P4;
