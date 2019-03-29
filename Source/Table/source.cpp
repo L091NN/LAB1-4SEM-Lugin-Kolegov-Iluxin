@@ -49,8 +49,7 @@ bool ArrayTable<T1, T2>::Find(T1 key, TableRecord<T1, T2>* ret)
 	{
 		if (table[i].key == key)
 		{
-			TableRecord<T1, T2>* tmp = &table[i];
-			ret = tmp;
+			*ret = table[i];
 			return true;
 		}
 	}
@@ -77,11 +76,11 @@ void ListTable<T1, T2>::Delete(T1 key)
 template <class T1, class T2>
 bool ListTable<T1, T2>::Find(T1 key, TableRecord<T1, T2>* ret)
 {
-	for (int i = 0; i < table.size(); i++)
+	for (auto item : table)
 	{
-		if (table[i].key == key)
+		if (item.key == key)
 		{
-			ret = &table[i];
+			*ret = item;
 			return true;
 		}
 	}
@@ -159,7 +158,7 @@ bool SortedTable<T1, T2>::Find(T1 key, TableRecord<T1, T2>* ret)
 	if (index == -1)
 		return false;
 
-	ret = &table[mem[index].index];
+	*ret = table[mem[index].index];
 	return true;
 }
 
@@ -174,17 +173,18 @@ void TreeTable<T1, T2>::Insert(TableRecord<T1, T2> tr)
 	{
 		table = new Node();
 		table->data = tr;
+		return;
 	}
 
 	Node* current = table;
 	while (true)
 	{
-		if (current->data->key > tr.key)
+		if (current->data.key > tr.key)
 		{
 			if (current->left == nullptr)
 			{
 				Node* l = new Node();
-				l.data = tr;
+				l->data = tr;
 				current->left = l;
 				return;
 			}
@@ -198,7 +198,7 @@ void TreeTable<T1, T2>::Insert(TableRecord<T1, T2> tr)
 			if (current->right == nullptr)
 			{
 				Node* l = new Node();
-				l.data = tr;
+				l->data = tr;
 				current->right = l;
 				return;
 			}
@@ -269,9 +269,9 @@ void* TreeTable<T1, T2>::DeleteNode(TreeTable<T1, T2>::Node* parent, T1 key)
 template <class T1, class T2>
 bool TreeTable<T1, T2>::Find(T1 key, TableRecord<T1, T2>* ret)
 {
-	if (key == table->data->key)
+	if (key == table->data.key)
 	{
-		ret = table->data;
+		*ret = table->data;
 		return true;
 	}
 
@@ -280,12 +280,12 @@ bool TreeTable<T1, T2>::Find(T1 key, TableRecord<T1, T2>* ret)
 	{
 		if (current == nullptr)
 			return false;
-		if (current->data->key == key)
+		if (current->data.key == key)
 		{
-			ret = current->data;
+			*ret = current->data;
 			return true;
 		}
-		else if (current->data->key > key)
+		else if (current->data.key > key)
 		{
 			current = current->left;
 		}
@@ -306,7 +306,7 @@ void HashTable<T1, T2>::Insert(TableRecord<T1, T2> tr)
 {
 	int offset = 0;
 	int index = Hash(tr.key);
-	while (table[(index + offset) % size] != nullptr)
+	while (table[(index + offset) % size] != EMPTY)
 	{
 		offset++;
 	}
@@ -324,7 +324,7 @@ void HashTable<T1, T2>::Delete(T1 key)
 	}
 	if (offset >= size)
 		return;
-	table[(index + offset) % size] = nullptr;
+	table[(index + offset) % size] = EMPTY;
 }
 
 template <class T1, class T2>
@@ -350,7 +350,7 @@ bool HashTable<T1, T2>::Find(T1 key, TableRecord<T1, T2>* ret)
 	}
 	if (offset >= size)
 		return false;
-	ret = &table[(index + offset) % size];
+	*ret = table[(index + offset) % size];
 	return true;
 }
 
@@ -392,7 +392,7 @@ bool HashTableList<T1, T2>::Find(T1 key, TableRecord<T1, T2>* ret)
 	{
 		if (item.key == key)
 		{
-			ret = &item;
+			*ret = item;
 			return true;
 		}
 	}

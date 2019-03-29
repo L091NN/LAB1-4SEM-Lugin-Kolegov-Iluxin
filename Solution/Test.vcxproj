@@ -77,7 +77,7 @@
       <SDLCheck>
       </SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Source/Polinom_algebr; ../Source/Gtest</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Source/Polinom_algebr; ../Source/Gtest; ../Source/Table</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -86,6 +86,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../Source/Gtest; ../Source/Polinom_algebr</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -119,9 +120,11 @@
   <ItemGroup>
     <ClCompile Include="..\Source\Polinom_algebr\Monom.cpp" />
     <ClCompile Include="..\Source\Polinom_algebr\Polinom.cpp" />
+    <ClCompile Include="..\Source\Table\source.cpp" />
     <ClCompile Include="..\Source\Test\test_main.cpp" />
     <ClCompile Include="..\Source\Test\test_monom.cpp" />
     <ClCompile Include="..\Source\Test\test_polinom.cpp" />
+    <ClCompile Include="test_tables.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="GTest.vcxproj">

@@ -115,7 +115,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Source\Polinom_algebr\main.cpp" />
     <ClCompile Include="..\Source\Polinom_algebr\Monom.cpp" />
     <ClCompile Include="..\Source\Polinom_algebr\Polinom.cpp" />
   </ItemGroup>

@@ -76,7 +76,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Source/Polinom_algebr; ../Source/Table</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Source/Polinom_algebr; ../Source/Table;</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -85,6 +85,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../Source/Table; ../Source/Polinom_algebr</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -117,8 +118,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Core\main.cpp" />
-    <ClCompile Include="..\Source\Polinom_algebr\Monom.cpp" />
-    <ClCompile Include="..\Source\Polinom_algebr\Polinom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Polinom.vcxproj">

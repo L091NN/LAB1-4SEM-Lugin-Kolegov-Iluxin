@@ -17,6 +17,15 @@ struct TableRecord
 	}
 
 	TableRecord() { }
+
+	bool operator==(const TableRecord<TKey,TValue>& tr)
+	{
+		return key == tr.key;
+	}
+	bool operator!=(const TableRecord<TKey, TValue> &tr)
+	{
+		return !(*this == tr);
+	}
 };
 
 #pragma region ArrayTable
@@ -184,10 +193,11 @@ class TreeTable
 	struct Node
 	{
 		TableRecord<T1, T2> data;
-		Node* left, *right;
+		Node* left = nullptr;
+		Node* right = nullptr;
 	};
 	int eventCount = 0;
-	Node* table;
+	Node* table = nullptr;
 	void* DeleteNode(Node* parent, T1 key);
 
 	void AddToExport(std::list<TableRecord<T1, T2>>* list, Node* n)
@@ -198,7 +208,20 @@ class TreeTable
 		AddToExport(list, n->left);
 		AddToExport(list, n->right);
 	}
+
+	void FreeMem(Node* parent)
+	{
+		if (parent == nullptr)
+			return;
+
+		FreeMem(parent->left);
+		FreeMem(parent->right);
+		delete parent;
+	}
+
 public:
+
+
 	void Insert(TableRecord<T1, T2> tr);
 	bool Find(T1 key, TableRecord<T1, T2>* ret);
 	void Delete(T1 key);
@@ -210,6 +233,11 @@ public:
 
 		return tmp;
 	}
+
+	~TreeTable()
+	{
+		FreeMem(table);
+	}
 };
 #pragma endregion
 
@@ -218,6 +246,8 @@ public:
 template <class T1, class T2>
 class HashTable
 {
+	TableRecord<T1, T2> EMPTY;
+
 	int size;
 	TableRecord<T1, T2>* table;
 	int Hash(std::string key);
@@ -226,6 +256,9 @@ public:
 	{
 		size = s;
 		table = new TableRecord<T1, T2>[size];
+
+		for (int i = 0; i < s; i++)
+			table[i] = EMPTY;
 	}
 	HashTable(const HashTable<T1,T2>& ht)
 	{
@@ -247,7 +280,7 @@ public:
 	{
 		std::list<TableRecord<T1, T2>> tmp;
 		for (int i = 0; i < size; i++)
-			if(table[i] != nullptr)
+			if(table[i] != EMPTY)
 				tmp.push_back(table[i]);
 
 		return tmp;
@@ -290,7 +323,7 @@ public:
 	{
 		std::list<TableRecord<T1, T2>> tmp;
 		for (int i = 0; i < size; i++)
-			if (table[i] != nullptr)
+			if (table[i].size() != 0 )
 				for (auto item : table[i])
 					tmp.push_back(item);
 

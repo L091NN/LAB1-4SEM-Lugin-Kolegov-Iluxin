@@ -33,6 +33,8 @@ public:
 	Polinom operator/(const Polinom &P);
 	Polinom operator%(const Polinom &P);
 
+	
+
 	Polinom dx();
 	Polinom dy();
 	Polinom dz();
