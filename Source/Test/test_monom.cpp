@@ -1,5 +1,5 @@
-#include"gtest.h"
-#include"Monom.h"
+#include "gtest.h"
+#include "Polinom.h"
 
 TEST(Monom, can_create_monom)
 {

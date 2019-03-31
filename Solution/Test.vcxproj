@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{48217823-C60F-4986-B64E-7928F80FB9B9}</ProjectGuid>
-    <RootNamespace>test</RootNamespace>
+    <ProjectGuid>{28DE3292-8C93-4BD5-9034-A713A0A34556}</ProjectGuid>
+    <RootNamespace>Test</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -74,14 +74,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>
+      </SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Asus\source\repos\LAB1-4SEM-Lugin-Kolegov-Iluxin\Tests</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions); _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../Source/Polinom_algebr; ../Source/Gtest; ../Source/Table</AdditionalIncludeDirectories>
     </ClCompile>
-    <Link>
-      <AdditionalDependencies>C:\Users\Asus\source\repos\LAB1-4SEM-Lugin-Kolegov-Iluxin\Polinom;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -89,6 +86,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../Source/Gtest; ../Source/Polinom_algebr</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -99,13 +97,10 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Asus\source\repos\LAB1-4SEM-Lugin-Kolegov-Iluxin\Tests</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions); _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>C:\Users\Asus\source\repos\LAB1-4SEM-Lugin-Kolegov-Iluxin\Polinom;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -123,8 +118,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="test_main.cpp" />
-    <ClCompile Include="test_monom.cpp" />
+    <ClCompile Include="..\Source\Polinom_algebr\Polinom.cpp" />
+    <ClCompile Include="..\Source\Test\test_main.cpp" />
+    <ClCompile Include="..\Source\Test\test_monom.cpp" />
+    <ClCompile Include="..\Source\Test\test_polinom.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="GTest.vcxproj">
+      <Project>{4ff6181a-cf63-4f33-a89c-5244f9d04d59}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Polinom.vcxproj">
+      <Project>{c4d69985-58cb-4d3b-a962-6ca9959c9ec3}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

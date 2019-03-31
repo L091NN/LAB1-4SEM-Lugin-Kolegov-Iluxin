@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{82342E93-E578-477E-B305-8FA0C131DF49}</ProjectGuid>
-    <RootNamespace>Polinomalgebr</RootNamespace>
+    <ProjectGuid>{6E24596A-6ADE-45F3-B98C-B9F782D7B450}</ProjectGuid>
+    <RootNamespace>Core</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -76,6 +76,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../Source/Polinom_algebr; ../Source/Table;</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -84,6 +85,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../Source/Table; ../Source/Polinom_algebr</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -115,13 +117,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Monom.h" />
-    <ClInclude Include="Polinom.h" />
+    <ClCompile Include="..\Source\Core\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Monom.cpp" />
-    <ClCompile Include="Polinom.cpp" />
+    <ProjectReference Include="Polinom.vcxproj">
+      <Project>{c4d69985-58cb-4d3b-a962-6ca9959c9ec3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Table.vcxproj">
+      <Project>{0772d7ca-5a6e-440c-acde-b04205b4e080}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

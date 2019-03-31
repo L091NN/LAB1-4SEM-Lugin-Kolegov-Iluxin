@@ -1,5 +1,5 @@
-#include"Polinom.h"
-#include<string>
+п»ї#include "Polinom.h"
+#include <string>
 
 using namespace std;
 
@@ -35,7 +35,7 @@ Polinom::~Polinom()
 
 }
 
-void Polinom::recount() // перезадает номер мономам после удаления/добавления новых мономов, объединяет мономы с одинаковым p !после сортировки!
+void Polinom::recount() // ГЇГҐГ°ГҐГ§Г Г¤Г ГҐГІ Г­Г®Г¬ГҐГ° Г¬Г®Г­Г®Г¬Г Г¬ ГЇГ®Г±Г«ГҐ ГіГ¤Г Г«ГҐГ­ГЁГї/Г¤Г®ГЎГ ГўГ«ГҐГ­ГЁГї Г­Г®ГўГ»Гµ Г¬Г®Г­Г®Г¬Г®Гў, Г®ГЎГєГҐГ¤ГЁГ­ГїГҐГІ Г¬Г®Г­Г®Г¬Г» Г± Г®Г¤ГЁГ­Г ГЄГ®ГўГ»Г¬ p !ГЇГ®Г±Г«ГҐ Г±Г®Г°ГІГЁГ°Г®ГўГЄГЁ!
 {
 	if (P.size() > 1)
 	{
@@ -74,13 +74,13 @@ void Polinom::recount() // перезадает номер мономам после удаления/добавления но
 	}
 }
 
-void Polinom::sort() // сортирует мономы по переменной p (показатели степени)
+void Polinom::sort() // Г±Г®Г°ГІГЁГ°ГіГҐГІ Г¬Г®Г­Г®Г¬Г» ГЇГ® ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г®Г© p (ГЇГ®ГЄГ Г§Г ГІГҐГ«ГЁ Г±ГІГҐГЇГҐГ­ГЁ)
 {
-	for (int i = 1; i < P.size(); i++) // i - номер прохода
+	for (int i = 1; i < P.size(); i++) // i - Г­Г®Г¬ГҐГ° ГЇГ°Г®ГµГ®Г¤Г 
 	{
 		auto I = P.end();
 		I--;
-		for (auto J = P.begin(); J != I;) // внутренний цикл прохода
+		for (auto J = P.begin(); J != I;) // ГўГ­ГіГІГ°ГҐГ­Г­ГЁГ© Г¶ГЁГЄГ« ГЇГ°Г®ГµГ®Г¤Г 
 		{
 			auto J1 = J++;
 			if (J1->Getp() < J->Getp())
@@ -96,7 +96,7 @@ void Polinom::sort() // сортирует мономы по переменной p (показатели степени)
 	}
 }
 
-void Polinom::parsing(string s) // жопоболь
+void Polinom::parsing(string s) // Г¦Г®ГЇГ®ГЎГ®Г«Гј
 {
 	bool ind_of_monom = 0; // monom begin?
 	char check_error_double_symbol = char(1);  // COSTIL---------------------------------------------------
@@ -347,7 +347,7 @@ string Polinom::GetPolinom_str()
 	string Res = "";
 	for (auto I = P.begin(); I != P.end();)
 	{
-		if (I->GetK() != 1.0)
+		if (I->GetK() != 1.0 || I->Getp() == 0)
 		{
 			string buf = "";
 			buf = to_string(I->GetK());
@@ -475,12 +475,198 @@ Polinom Polinom::operator*(const Polinom &P)
 
 Polinom Polinom::operator/(const Polinom &P)
 {
-	return *this;
+	Polinom PP(P);
+	list<Monom> W = this->GetPolinom();
+	list<Monom> D = PP.GetPolinom();
+	string str_D = PP.GetPolinom_str();
+	char val = '0';
+	for (int sim = 0; sim < str_D.size(); sim++)
+	{
+		if (str_D[sim] == 'x' || str_D[sim] == 'X')
+		{
+			val = 'x';
+			break;
+		}
+		if (str_D[sim] == 'y' || str_D[sim] == 'Y')
+		{
+			val = 'y';
+			break;
+		}
+		if (str_D[sim] == 'z' || str_D[sim] == 'Z')
+		{
+			val = 'z';
+			break;
+		}
+	}
+	list<Monom> Res;
+	Monom M0(0.0, 0, 0, 0);
+	Res.push_back(M0);
+	if (val == 'x')
+	{
+		list<Monom> W_begin = W;
+		auto I1 = W.begin();
+		auto I2 = D.begin();
+		auto I3 = Res.begin();
+		for (; W.begin()->GetXpower() >= D.begin()->GetXpower();)
+		{
+			I1 = W.begin();
+			int x_now = W.begin()->GetXpower();
+			for (; I1->GetXpower() == x_now;)
+			{
+				int RMPX = I1->GetXpower() - I2->GetXpower(); // Res monom power X 
+				int RMPY = I1->GetYpower() - I2->GetYpower(); // Res monom power Y 
+				int RMPZ = I1->GetZpower() - I2->GetZpower(); // Res monom power Z 
+				double RMK = I1->GetK() / I2->GetK(); // Res monom koef 
+				Monom RM(RMK, RMPX, RMPY, RMPZ);
+				Res.push_back(RM);
+				I1++;
+			}
+			Polinom P1(W);
+			I3++;
+			for (; I3 != Res.end();)
+			{
+				Polinom P2(*I3);
+				for (; I2 != D.end();)
+				{
+					Polinom P3(*I2);
+					P1 = P1 - (P2 * P3);
+					I2++;
+				}
+				I2 = D.begin();
+				I3++;
+			}
+			W = P1.GetPolinom();
+			I3--;
+			if (!W.size())
+			{
+				break;
+			}
+		}
+		if (W.size())
+		{
+			if (W.begin()->GetXpower() == W_begin.begin()->GetXpower())
+				if (W.begin()->GetK() == W_begin.begin()->GetK())
+				{
+					Polinom RES;
+					return RES;
+				}
+		}
+		Polinom PRES(Res);
+		return PRES;
+	}
+	if (val == 'y')
+	{
+		// coming soon 
+	}
+	if (val == 'z')
+	{
+		// coming soon 
+	}
+	if (val == '0')
+	{
+		for (auto I = W.begin(); I != W.end(); I++)
+		{
+			I->SetK(I->GetK() / D.begin()->GetK());
+		}
+		Polinom RESP(W);
+		return RESP;
+	}
 }
 
 Polinom Polinom::operator%(const Polinom &P)
 {
-	return *this;
+	Polinom PP(P);
+	list<Monom> W = this->GetPolinom();
+	list<Monom> D = PP.GetPolinom();
+	string str_D = PP.GetPolinom_str();
+	char val = '0';
+	for (int sim = 0; sim < str_D.size(); sim++)
+	{
+		if (str_D[sim] == 'x' || str_D[sim] == 'X')
+		{
+			val = 'x';
+			break;
+		}
+		if (str_D[sim] == 'y' || str_D[sim] == 'Y')
+		{
+			val = 'y';
+			break;
+		}
+		if (str_D[sim] == 'z' || str_D[sim] == 'Z')
+		{
+			val = 'z';
+			break;
+		}
+	}
+	list<Monom> Res;
+	Monom M0(0.0, 0, 0, 0);
+	Res.push_back(M0);
+	if (val == 'x')
+	{
+		list<Monom> W_begin = W;
+		auto I1 = W.begin();
+		auto I2 = D.begin();
+		auto I3 = Res.begin();
+		for (; W.begin()->GetXpower() >= D.begin()->GetXpower();)
+		{
+			I1 = W.begin();
+			int x_now = W.begin()->GetXpower();
+			for (; I1->GetXpower() == x_now;)
+			{
+				int RMPX = I1->GetXpower() - I2->GetXpower(); // Res monom power X 
+				int RMPY = I1->GetYpower() - I2->GetYpower(); // Res monom power Y 
+				int RMPZ = I1->GetZpower() - I2->GetZpower(); // Res monom power Z 
+				double RMK = I1->GetK() / I2->GetK(); // Res monom koef 
+				Monom RM(RMK, RMPX, RMPY, RMPZ);
+				Res.push_back(RM);
+				I1++;
+			}
+			Polinom P1(W);
+			I3++;
+			for (; I3 != Res.end();)
+			{
+				Polinom P2(*I3);
+				for (; I2 != D.end();)
+				{
+					Polinom P3(*I2);
+					P1 = P1 - (P2 * P3);
+					I2++;
+				}
+				I2 = D.begin();
+				I3++;
+			}
+			W = P1.GetPolinom();
+			I3--;
+			if (!W.size())
+			{
+				break;
+			}
+		}
+		if (W.size())
+		{
+			if (W.begin()->GetXpower() == W_begin.begin()->GetXpower())
+				if (W.begin()->GetK() == W_begin.begin()->GetK())
+				{
+					Polinom RES(W);
+					return RES;
+				}
+		}
+		Polinom PRES(W);
+		return PRES;
+	}
+	if (val == 'y')
+	{
+		// coming soon 
+	}
+	if (val == 'z')
+	{
+		// coming soon 
+	}
+	if (val == '0')
+	{
+		Polinom RESP;
+		return RESP;
+	}
 }
 
 Polinom Polinom::dx()
@@ -610,4 +796,131 @@ double Polinom::count(double x, double y, double z)
 		Res += Mon;
 	}
 	return Res;
+}
+
+
+
+
+
+
+
+
+Monom::Monom(double k, int x, int y, int z)
+{
+	this->k = 0.0;
+	p = 0;
+	Number = 0;
+	SetXpower(x);
+	SetYpower(y);
+	SetZpower(z);
+	SetK(k);
+}
+
+Monom::~Monom()
+{
+
+}
+
+void Monom::SetXpower(int x)
+{
+	if (x < 0 || x > 9)
+	{
+		throw("x power incorrect");
+	}
+	p = p % 100 + x * 100;
+}
+void Monom::SetYpower(int y)
+{
+	if (y < 0 || y > 9)
+	{
+		throw("y power incorrect");
+	}
+	p = p - ((p % 100) / 10) * 10 + y * 10;
+}
+void Monom::SetZpower(int z)
+{
+	if (z < 0 || z > 9)
+	{
+		throw("z power incorrect");
+	}
+	p = p - (p % 100) % 10 + z;
+}
+
+int Monom::GetXpower()
+{
+	return p / 100;
+}
+
+int Monom::GetYpower()
+{
+	return (p % 100) / 10;
+}
+
+int Monom::GetZpower()
+{
+	return (p % 100) % 10;
+}
+
+void Monom::SetK(double k)
+{
+	if (k*k < 0.000000001)
+	{
+		p = 0;
+	}
+	this->k = k;
+}
+
+double Monom::GetK()
+{
+	return k;
+}
+
+int Monom::Getp()
+{
+	return p;
+}
+
+void Monom::SetNum(int N)
+{
+	Number = N;
+}
+
+int Monom::GetNum()
+{
+	return Number;
+}
+
+bool Monom::operator==(const Monom &M) // СЃСЂР°РІРЅРёРІР°РµС‚ С‚РѕР»СЊРєРѕ РїРѕРєР°Р·Р°С‚РµР»Рё СЃС‚РµРїРµРЅРё
+{
+	if (this->p == M.p)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+bool Monom::operator!=(const Monom &M)
+{
+	return !(*this == M);
+}
+
+Monom& Monom::operator=(const Monom &M)// number don't change
+{
+	if (this != &M)
+	{
+		this->k = M.k;
+		this->p = M.p;
+	}
+	return *this;
+}
+
+Monom Monom::operator+(const Monom &M) // СЃРєР»Р°РґС‹РІР°РµС‚ С‚РѕР»СЊРєРѕ РєРѕСЌС„С„РёС†РµРЅС‚С‹
+{
+	if (this->p == M.p)
+	{
+		Monom M1(*this);
+		M1.k = this->k + M.k;
+		return M1;
+	}
+	throw("ERROR, powers not equal");
 }
