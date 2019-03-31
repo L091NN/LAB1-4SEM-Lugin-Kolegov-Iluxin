@@ -70,7 +70,7 @@ void ListTable<T1, T2>::Insert(TableRecord<T1, T2> tr)
 template <class T1, class T2>
 void ListTable<T1, T2>::Delete(T1 key)
 {
-	table.remove_if([](const TableRecord& t) { return key == t.key; });
+	table.remove_if([&](const TableRecord<T1,T2>& t) { return key == t.key; });
 }
 
 template <class T1, class T2>
@@ -147,8 +147,10 @@ void SortedTable<T1, T2>::Delete(T1 key)
 		return;
 
 	memPack<T1> cell = mem[index];
-	moveLeft(cell);
-	mem[maxSize] = cell;
+	moveLeft(index);
+	mem[maxSize-1] = cell;
+	
+	size--;
 }
 
 template <class T1, class T2>
@@ -173,6 +175,7 @@ void TreeTable<T1, T2>::Insert(TableRecord<T1, T2> tr)
 	{
 		table = new Node();
 		table->data = tr;
+		table->left = table->right = nullptr;
 		return;
 	}
 
@@ -185,6 +188,7 @@ void TreeTable<T1, T2>::Insert(TableRecord<T1, T2> tr)
 			{
 				Node* l = new Node();
 				l->data = tr;
+				l->left = l->right = nullptr;
 				current->left = l;
 				return;
 			}
@@ -199,6 +203,7 @@ void TreeTable<T1, T2>::Insert(TableRecord<T1, T2> tr)
 			{
 				Node* l = new Node();
 				l->data = tr;
+				l->left = l->right = nullptr;
 				current->right = l;
 				return;
 			}
@@ -217,53 +222,6 @@ void TreeTable<T1, T2>::Delete(T1 key)
 {
 	DeleteNode(table, key);
 	eventCount++;
-}
-
-template <class T1, class T2>
-void* TreeTable<T1, T2>::DeleteNode(TreeTable<T1, T2>::Node* parent, T1 key)
-{
-	if (parent == nullptr) return parent;
-	else if (key < parent->data->key)
-		parent->left = DeleteNode(parent->left, key);
-	else if (key > parent->data->key)
-		parent->right = DeleteNode(parent->right, key);
-	else
-	{
-		if (parent->right == nullptr && parent->left == nullptr)
-		{
-			delete parent;
-			parent = nullptr;
-		}
-		else if (parent->right == nullptr)
-		{
-			Node* temp = parent;
-			parent = parent->left;
-			delete temp;
-		}
-		else if (parent->left == nullptr)
-		{
-			Node* temp = parent;
-			parent = parent->right;
-			delete temp;
-		}
-		else
-		{
-			Node* temp;
-			if (parent == nullptr)
-				temp = nullptr;
-
-			while (parent->right != nullptr)
-			{
-				parent = parent->right;
-			}
-
-			temp = parent;
-
-			parent->data = temp->data;
-			parent->left = DeleteNode(parent->left, temp->data->key);
-		}
-	}
-	return parent;
 }
 
 template <class T1, class T2>
@@ -369,7 +327,7 @@ template <class T1, class T2>
 void HashTableList<T1, T2>::Delete(T1 key)
 {
 	int index = Hash(key);
-	table[index].remove_if([](const TableRecord<T1, T2>& t) {return t.key == key; });
+	table[index].remove_if([&](const TableRecord<T1, T2>& t) {return t.key == key; });
 }
 
 template <class T1, class T2>

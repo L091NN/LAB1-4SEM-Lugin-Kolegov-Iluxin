@@ -198,7 +198,51 @@ class TreeTable
 	};
 	int eventCount = 0;
 	Node* table = nullptr;
-	void* DeleteNode(Node* parent, T1 key);
+	Node* DeleteNode(Node* parent, T1 key)
+	{
+		if (parent == nullptr) return parent;
+		else if (key < parent->data.key)
+			parent->left = DeleteNode(parent->left, key);
+		else if (key > parent->data.key)
+			parent->right = DeleteNode(parent->right, key);
+		else
+		{
+			if (parent->right == nullptr && parent->left == nullptr)
+			{
+				delete parent;
+				parent = nullptr;
+			}
+			else if (parent->right == nullptr)
+			{
+				Node* temp = parent;
+				parent = parent->left;
+				delete temp;
+			}
+			else if (parent->left == nullptr)
+			{
+				Node* temp = parent;
+				parent = parent->right;
+				delete temp;
+			}
+			else
+			{
+				Node* temp;
+				if (parent == nullptr)
+					temp = nullptr;
+
+				while (parent->right != nullptr)
+				{
+					parent = parent->right;
+				}
+
+				temp = parent;
+
+				parent->data = temp->data;
+				parent->left = DeleteNode(parent->left, temp->data.key);
+			}
+		}
+		return parent;
+	}
 
 	void AddToExport(std::list<TableRecord<T1, T2>>* list, Node* n)
 	{

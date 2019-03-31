@@ -1,27 +1,65 @@
-#ifndef __POLINOM_H__
+п»ї#ifndef __POLINOM_H__
 #define __POLINOM_H__
 
 #include <list>
 #include <math.h>
-#include "Monom.h"
+
+
+class Monom
+{
+	double k; // РєРѕСЌС„С„РёС†РµРЅС‚ РјРѕРЅРѕРјР°
+	int p; // РїРѕРєР°Р·Р°С‚РµР»Рё СЃС‚РµРїРµРЅРё РјРѕРЅРѕРјР°
+	int Number; // РЅРѕРјРµСЂ РІ РїРѕР»РёРЅРѕРјРµ
+
+
+public:
+	Monom(double k = 1.0, int x = 0, int y = 0, int z = 0);
+	~Monom();
+
+	void SetXpower(int x);
+	void SetYpower(int y);
+	void SetZpower(int z);
+	int GetXpower();
+	int GetYpower();
+	int GetZpower();
+	void SetK(double k);
+	double GetK();
+	int Getp();
+
+	void SetNum(int N);
+	int GetNum();
+
+	bool operator==(const Monom &M); // СЃСЂР°РІРЅРёРІР°РµС‚ С‚РѕР»СЊРєРѕ РїРѕРєР°Р·Р°С‚РµР»Рё СЃС‚РµРїРµРЅРё
+	bool operator!=(const Monom &M);
+	Monom& operator=(const Monom &M);
+	Monom operator+(const Monom &M); // СЃРєР»Р°РґС‹РІР°РµС‚ С‚РѕР»СЊРєРѕ РєРѕСЌС„С„РёС†РµРЅС‚С‹
+};
+
+
+
+
+
+
 
 class Polinom
 {
-	std::list<Monom> P; // место хранения мономов
+	std::list<Monom> P; // Г¬ГҐГ±ГІГ® ГµГ°Г Г­ГҐГ­ГЁГї Г¬Г®Г­Г®Г¬Г®Гў
+	std::string Name; // name of polinom
 	static int ID_gen;
 	int ID;
 
-	void recount(); // перезадает номер мономам после удаления/добавления новых мономов, объединяет мономы с одинаковым p !после сортировки!
-	void sort(); // сортирует мономы по переменной p (показатели степени)
-	void parsing(std::string s); // жопоболь
+	void recount(); 
+	void sort(); 
+	void parsing(std::string s); 
 
 public:
 
-	Polinom(std::string s = "");
-	Polinom(std::list<Monom> P1);
-	Polinom(Monom M);
+	Polinom(std::string s = "", std::string Name = "NULL");
+	Polinom(std::list<Monom> P1, std::string Name = "NULL");
+	Polinom(Monom M, std::string Name = "NULL");
 	~Polinom();
 
+	std::string GetName();
 	std::list<Monom> GetPolinom();
 	std::string GetPolinom_str();
 	int GetID();
@@ -33,8 +71,6 @@ public:
 	Polinom operator/(const Polinom &P);
 	Polinom operator%(const Polinom &P);
 
-	
-
 	Polinom dx();
 	Polinom dy();
 	Polinom dz();
@@ -44,6 +80,10 @@ public:
 	Polinom Iz(double C = 0);//C-const
 
 	double count(double x, double y, double z);
+
+
+
+
 };
 
 #endif

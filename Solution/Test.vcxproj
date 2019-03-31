@@ -118,13 +118,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Source\Polinom_algebr\Monom.cpp" />
     <ClCompile Include="..\Source\Polinom_algebr\Polinom.cpp" />
-    <ClCompile Include="..\Source\Table\source.cpp" />
     <ClCompile Include="..\Source\Test\test_main.cpp" />
     <ClCompile Include="..\Source\Test\test_monom.cpp" />
     <ClCompile Include="..\Source\Test\test_polinom.cpp" />
-    <ClCompile Include="test_tables.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="GTest.vcxproj">
