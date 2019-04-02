@@ -1,5 +1,7 @@
 #include "Polinom.h";
 #include "tables.cpp"
+#include <stack>
+#include <time.h>
 
 ArrayTable<std::string, std::string> at;
 ListTable<std::string, std::string> lt;
@@ -25,6 +27,7 @@ void Ix();
 void Iy();
 void Iz();
 void count();
+void calculate();
 
 
 int main(int argc, char** argv) 
@@ -97,6 +100,10 @@ int main(int argc, char** argv)
 		if (command == "count")
 		{
 			count();
+		}
+		if (command == "calculate")
+		{
+			calculate();
 		}
 
 		std::cout << "USER>";
@@ -895,4 +902,249 @@ void count()
 
 	std::cout << "Count in (" << X << ',' << Y << ',' << Z << ") equals: " << std::to_string(P1.count(X, Y, Z)) << std::endl;
 
+}
+
+std::string ToPostfix(std::string localInfix, std::string infix = "")
+{
+	bool top = false;
+	if (localInfix == "...")
+	{
+		top = true;
+		localInfix = infix;
+
+
+		int i;
+		while ((i = localInfix.find(' ')) != std::string::npos)
+			localInfix.erase(i, 1);
+
+	}
+
+
+	if (localInfix[0] == '(')
+	{
+		int count = 1;
+		int i;
+		for (i = 1; i < localInfix.length(); i++)
+		{
+			if (localInfix[i] == '(')
+				count++;
+
+
+			if (localInfix[i] == ')')
+				count--;
+
+			if (count == 0)
+				break;
+		}
+
+		if (i == localInfix.length() - 1)
+			localInfix = localInfix.substr(1, localInfix.length() - 2);
+
+
+		if (count != 0)
+			throw "Error";
+	}
+
+
+
+	int operatorIndex = -1;
+	int insideBrackets = 0;
+
+	char triggers[] = { '+','-' };
+
+	int j = 0;
+
+	do
+	{
+		for (int i = localInfix.length() - 1; i >= 0; i--)
+		{
+			if (localInfix[i] == ')') {
+				insideBrackets++;
+				continue;
+			}
+			if (localInfix[i] == '(') {
+
+				if (insideBrackets == 0)
+					throw "Error";
+
+				insideBrackets--;
+				continue;
+			}
+			if (((localInfix[i] == triggers[0]) || (localInfix[i] == triggers[1])) && (insideBrackets == 0))
+			{
+				operatorIndex = i;
+				break;
+			}
+		}
+
+		triggers[0] = '*';
+		triggers[1] = '/';
+
+		j++;
+
+	} while (operatorIndex == -1 && j != 2);
+
+
+	if (insideBrackets != 0)
+		throw "Error";
+
+	if (operatorIndex == -1)
+
+		return localInfix;
+
+	std::string res = ToPostfix(localInfix.substr(0, operatorIndex)) + " " + ToPostfix(localInfix.substr(operatorIndex + 1, localInfix.length() - operatorIndex)) + " " + localInfix[operatorIndex];
+
+	return res + " ";
+
+}
+
+void calculate()
+{
+	std::string exp;
+	std::string table;
+
+	std::cout << "Enter expression: \n";
+	std::getline(std::cin, exp);
+
+	std::cout << "Enter table: \n";
+	std::getline(std::cin, table);
+
+
+	std::string postfix;
+	try {
+		postfix = ToPostfix("...", exp);
+	}
+	catch(...) {
+		std::cout << "Wrong expression";
+		return;
+	}
+
+
+	std::stack<Polinom> stack;
+	int index = 0;
+
+	for (int i = 0; i < postfix.length(); i++)
+	{
+		if (postfix[i] == ' ')
+		{
+			std::string token = postfix.substr(index, i - index);
+			index = i + 1;
+
+			//Если оператор
+
+			if (token.length() == 1 && (token[0] > 39 && token[0] < 48))
+			{
+				Polinom t2 = stack.top();
+				stack.pop();
+				Polinom t1 = stack.top();
+				stack.pop();
+
+				switch (token[0])
+				{
+				case '*':
+					stack.push(t1 * t2);
+					break;
+				case '/':
+					stack.push(t1 / t2);
+					break;
+				case '%':
+					stack.push(t1 % t2);
+					break;
+				case '+':
+					stack.push(t1 + t2);
+					break;
+				case '-':
+					stack.push(t1 - t2);
+					break;
+				}
+
+				continue;
+			}
+
+			//Если переменая
+			if ((token.length() == 1 && (token[0] > 96 && token[0] < 123)
+				|| (token[0] > 64 && token[0] < 91)) || token.length() > 1)
+			{
+				TableRecord<std::string, std::string> t;
+				if (table == "at")
+				{
+					if (!at.Find(token, &t))
+					{
+						std::cout << "Wrong table\n";
+						return;
+					}
+				}
+				if (table == "st")
+				{
+					if (!st.Find(token, &t))
+					{
+						std::cout << "Wrong table\n";
+						return;
+					}
+				}
+				if (table == "lt")
+				{
+					if (!lt.Find(token, &t))
+					{
+						std::cout << "Wrong table\n";
+						return;
+					}
+				}
+				if (table == "ht")
+				{
+					if (!ht.Find(token, &t))
+					{
+						std::cout << "Wrong table\n";
+						return;
+					}
+				}
+				if (table == "tt")
+				{
+					if (!tt.Find(token, &t))
+					{
+						std::cout << "Wrong table\n";
+						return;
+					}
+				}
+				if (table == "htl")
+				{
+					if (!htl.Find(token, &t))
+					{
+						std::cout << "Wrong table\n";
+						return;
+					}
+				}
+
+				stack.push(t.data);
+			}
+
+		}
+	}
+
+	Polinom res = stack.top();
+	stack.pop();
+
+	std::cout << "Answer: \n";
+	std::cout << res.GetPolinom_str() << "\n";
+
+	std::cout << "Save? (Y/N) ";
+
+	std::string anw;
+	std::getline(std::cin, anw);
+
+	if (anw == "Y" || anw == "y" || anw == "yes")
+	{
+		TableRecord<std::string, std::string> tr;
+		time_t ti;
+		time(&ti);
+		tr.key = "CALC" + std::to_string(ti);
+		tr.data = res.GetPolinom_str();
+
+		at.Insert(tr);
+		lt.Insert(tr);
+		st.Insert(tr);
+		tt.Insert(tr);
+		ht.Insert(tr);
+		htl.Insert(tr);
+	}
 }
